@@ -13,62 +13,70 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
- * Servlet implementation class RegisterServlet
- */
+import dao.BookDAO;
+import entities.BookData;
+
 @WebServlet("/register")
-public class RegisterServlet extends HttpServlet {  
-	
-	private static final String query = "INSERT INTO BOOKDATA(BOOKNAME,BOOKEDITION,BOOKPRICE) VALUES(?,?,?)";
-	private static final long serialVersionUID = 1L;
-       
-   
-    public RegisterServlet() {
-        super();
-       
+public class RegisterServlet extends HttpServlet {
+
+    private static final long serialVersionUID = 1L;
+    private Connection connection; // Store connection in servlet
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3307/book", "Luigi", "Buono");
+        } catch (ClassNotFoundException | SQLException e) {
+            throw new ServletException("Database initialization failed", e);
+        }
     }
 
     @Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-    	//get PrintWriter
-    	PrintWriter pw = res.getWriter();
-    	res.setContentType("text/html");
-    	
-    	String bookName = req.getParameter("bookName");
-    	String bookEdition = req.getParameter("bookEdition");
-    	float bookPrice = Float.parseFloat(req.getParameter("bookPrice"));
-    	
-    	try {
-    	Class.forName("com.mysql.cj.jdbc.Driver");
-    	}catch(ClassNotFoundException cnf) {
-    		cnf.printStackTrace();
-    	}
-    	try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3307/book","Luigi", "Buono");
-    		PreparedStatement ps = con.prepareStatement(query)){
-    			ps.setString(1,bookName);
-    			ps.setString(2, bookEdition);
-    			ps.setFloat(3,  bookPrice);
-    			int count = ps.executeUpdate();
-    			if (count ==1) {
-    				pw.println("<h2>Record Is Registered Sucessfully </h2>");
-    			}else {
-    				pw.println("<h2> Record not Registered Sucessfully");
-    			}
-    		}catch(SQLException se) {
-    			se.printStackTrace();
-    			pw.println("<h1>" + se.getMessage()+"</h2>");
-    		}catch(Exception e) {
-    			e.printStackTrace();
-    			pw.println("<h1>" + e.getMessage()+"</h2>");
-    		}
-    		pw.println("<a href='home.html'>Home</a>");
-    		pw.println("<br>");
-    		pw.println("<a href='bookList'>Book List </a>");
-	}
+    protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+        PrintWriter pw = res.getWriter();
+        res.setContentType("text/html");
 
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		doGet(req,res);
-	}
+        String bookName = req.getParameter("bookName");
+        String bookEdition = req.getParameter("bookEdition");
+        float bookPrice = Float.parseFloat(req.getParameter("bookPrice"));
 
+        try {
+            BookDAO bookDAO = new BookDAO(connection); // Create BookDAO instance with the connection
+            BookData newBook = new BookData(0, bookName, bookEdition, bookPrice);
+            boolean success = bookDAO.insertBook(newBook);
+            if (success) {
+                pw.println("<h2>Record Is Registered Successfully </h2>");
+            } else {
+                pw.println("<h2> Record not Registered Successfully </h2>");
+            }
+        } catch (SQLException se) {
+            se.printStackTrace();
+            pw.println("<h1>" + se.getMessage() + "</h2>");
+        } catch (Exception e) {
+            e.printStackTrace();
+            pw.println("<h1>" + e.getMessage() + "</h2>");
+        }
+        pw.println("<a href='home.html'>Home</a>");
+        pw.println("<br>");
+        pw.println("<a href='bookList'>Book List </a>");
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+        doGet(req, res);
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        try {
+            if (connection != null) {
+                connection.close(); // Close the connection when servlet is destroyed
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
