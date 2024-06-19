@@ -21,7 +21,7 @@ import utils.Connessione;
 /**
  * Servlet implementation class login
  */
-@WebServlet("/login")
+@WebServlet("/jsp/login")
 public class Login extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

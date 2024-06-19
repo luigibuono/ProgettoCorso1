@@ -21,7 +21,7 @@ import utils.Connessione;
 /**
  * Servlet implementation class StampaStudenti
  */
-@WebServlet("/StampaStudenti")
+@WebServlet("/jsp/StampaStudenti")
 public class StampaStudenti extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -71,7 +71,7 @@ public class StampaStudenti extends HttpServlet {
 			PreparedStatement smt1= conn.prepareStatement("select nome,cognome,Matricola from studente join (appello join prenotazione on CAST(? AS UNSIGNED INTEGER)=app_prenotato) on Matricola=stud_prenotato");
 			smt1.setString(1, idAppello);
 			ResultSet rs1=smt1.executeQuery();
-			RequestDispatcher rd= request.getRequestDispatcher("jsp/professore.jsp");
+			RequestDispatcher rd= request.getRequestDispatcher("/jsp/professore.jsp");
 			request.setAttribute("Materia",nomeMateria);
 			request.setAttribute("Data",Data);
 			request.setAttribute("elenco_studenti", rs1);
@@ -82,7 +82,7 @@ public class StampaStudenti extends HttpServlet {
 			e.printStackTrace();
 			//per La gestione della pagina bianca quando mettevi male il numero dell'esame da selezionare
             request.setAttribute("error", "La prenotazione è avvenuta con successo");
-            RequestDispatcher rd = request.getRequestDispatcher("jsp/professore.jsp");
+            RequestDispatcher rd = request.getRequestDispatcher("/jsp/professore.jsp");
             rd.forward(request, response);
 		}
 

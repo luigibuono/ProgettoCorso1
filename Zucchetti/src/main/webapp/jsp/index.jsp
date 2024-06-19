@@ -20,7 +20,32 @@
 <body
 	background=https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D>
 
-
+<nav class="navbar navbar-expand-lg navbar-dark ">
+			<div class="container-fluid">
+				<a class="navbar-brand " href="#" style="color: black; font-size:1.5rem;font-weight: 700 ">ZUCCHETTI</a>
+				<button class="navbar-toggler" type="button"
+					data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+					aria-controls="navbarSupportedContent" aria-expanded="false"
+					aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon" style="color: black;"></span>
+				</button>
+				<div class="collapse navbar-collapse justify-content-end"
+					id="navbarSupportedContent">
+					<ul class="navbar-nav mb-2 mb-lg-0">
+						 <li class="nav-item">
+                       <a class="nav-link active" aria-current="page" href="/Zucchetti/html/home.html" style="color: black; font-size: 1rem;font-weight: 500">HOME</a>
+                      
+                    </li>
+					</ul>
+					<div class="search-add">
+						<!-- Eventuali contenuti della sezione "search-add" -->
+					</div>
+					<a class="nav-link active logout"><i
+						class="fa-solid fa-arrow-right-from-bracket" 
+						style="cursor: pointer; display:none" ></i></a>
+				</div>
+			</div>
+		</nav>
 	<div class="d-flex justify-content-center align-items-center vh-100">
 
 		<div align="center"

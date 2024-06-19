@@ -50,7 +50,7 @@ public class RegisterServlet extends HttpServlet {
             	coursePrice = Float.parseFloat(coursePriceStr); // Converti in Float se presente
             } catch (NumberFormatException e) {
                 pw.println("<div class='alert alert-danger' role='alert'>Invalid price format.</div>");
-                pw.println("<a href='courseList'>Courses List </a>");
+                pw.println("<a href='/Zucchetti/courseList'>Courses List </a>");
                 return;
             }
         } else {
@@ -80,7 +80,7 @@ public class RegisterServlet extends HttpServlet {
         // Stampare i link di navigazione
         pw.println("<a href='html/home.html'>Home</a>");
         pw.println("<br>");
-        pw.println("<a href='courseList'>Courses List </a>");
+        pw.println("<a href='/Zucchetti/courseList'>Courses List </a>");
     }
 
 

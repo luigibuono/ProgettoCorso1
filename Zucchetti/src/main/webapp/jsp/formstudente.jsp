@@ -13,7 +13,7 @@
     <div align="center" class="p-5 bg-primary-transparent text-white border" style="background-color: rgba(128, 128, 128, 0.7);">
         <% String matricola = (String) session.getAttribute("matricola"); %>
         <h2>Benvenuto studente: <%= matricola %></h2>
-        <a href="jsp/logout.jsp">Logout</a>
+        <a href="/Zucchetti/jsp/index.jsp">Logout</a>
 
         <% String success = (String) request.getAttribute("success"); %>
         <% String error = (String) request.getAttribute("error"); %>

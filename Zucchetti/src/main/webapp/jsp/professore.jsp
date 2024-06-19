@@ -19,108 +19,118 @@
 </head>
 <body
 	background=https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?q=80&w=2072&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
-	class="d-flex justify-content-center align-items-center vh-100">
-	<div align="center" class="p-5 bg-primary-trasparent text-white border"
-		style="background-color: rgba(128, 128, 128, 0.7);">
-		<%
-		String nome = (String) session.getAttribute("nome");
-		String cognome = (String) session.getAttribute("cognome");
-		String materia = (String) session.getAttribute("materia");
-		ResultSet appelli = (ResultSet) request.getAttribute("appelli");
-		ResultSet elenco = (ResultSet) request.getAttribute("elenco_studenti");
-		String nomeMateria = (String) request.getAttribute("Materia");
-		String Data = (String) request.getAttribute("Data");
-		String error = (String) request.getAttribute("error");// crearazione variabile errore
-		//aggiunta a riga 33/36
-		%>
-		<%
-		if (nome == null && cognome == null) {
-
-			response.sendRedirect("jsp/index.jsp");
-		}
-		%>
-		<p>
-			Bentornato
-			<%=nome%><%=cognome%></p>
+	>
+	
+	<nav class="navbar navbar-expand-lg navbar-dark ">
+			<div class="container-fluid">
+				<a class="navbar-brand " href="#" style="color: black; font-size:1.5rem;font-weight: 700 ">ZUCCHETTI</a>
+				<button class="navbar-toggler" type="button"
+					data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+					aria-controls="navbarSupportedContent" aria-expanded="false"
+					aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon" style="color: black;"></span>
+				</button>
+				<div class="collapse navbar-collapse justify-content-end"
+					id="navbarSupportedContent">
+					<ul class="navbar-nav mb-2 mb-lg-0">
+						 <li class="nav-item">
+                       <a class="nav-link active" aria-current="page" href="/Zucchetti/html/home.html" style="color: black; font-size: 1rem;font-weight: 500">HOME</a>
+                      
+                    </li>
+					</ul>
+					<div class="search-add">
+						<!-- Eventuali contenuti della sezione "search-add" -->
+					</div>
+					<a class="nav-link active logout"><i
+						class="fa-solid fa-arrow-right-from-bracket" 
+						style="cursor: pointer; display:none" ></i></a>
+				</div>
+			</div>
+		</nav>
 		
-<button align="center" class="btn btn-light" type="button">
+	<div class="container-fluid p-5 bg-primary-transparent text-white border"
+    style="background-color: rgba(128, 128, 128, 0.7); width:30rem;">
+    <%-- Controllo se le variabili di sessione sono presenti --%>
+    <%
+    String nome = (String) session.getAttribute("nome");
+    String cognome = (String) session.getAttribute("cognome");
+    String materia = (String) session.getAttribute("materia");
+    ResultSet appelli = (ResultSet) request.getAttribute("appelli");
+    ResultSet elenco = (ResultSet) request.getAttribute("elenco_studenti");
+    String nomeMateria = (String) request.getAttribute("Materia");
+    String Data = (String) request.getAttribute("Data");
+    String error = (String) request.getAttribute("error");
 
-			<a href="jsp/index.jsp"> Indietro </a>
-		</button>
-		<%
-		
-		if (error != null) {
-		%>
-		<div style="color: red;"><%=error%></div>
+    if (nome == null && cognome == null) {
+        response.sendRedirect("/Zucchetti/jsp/index.jsp");
+    }
+    %>
 
-		<button align="center" class="btn btn-light" type="button">
+    <p>Bentornato <%= nome %> <%= cognome %></p>
 
-			<a href="jsp/index.jsp"> Indietro </a>
-		</button>
-		<%
-		}
-		%>
-		<%
-		if (appelli != null) {
-		%>
-		<p>
-			Per la sua materia:
-			
-			sono disponibili i seguenti appelli
-		</p>
-		<table border=1>
-			<tr>
-				<th>ID Appello</th>
-				<th>Data</th>
-			</tr>
-			<%
-			while (appelli.next()) {
-			%>
-			<tr>
-				<th><%=appelli.getInt(1)%></th>
-				<th><%=appelli.getDate("Data")%></th>
-			</tr>
-		</table>
-		<%
-		}
-		%>
-		<form action="StampaStudenti" method="post">
-			<p>
-				<input type="number" name="ID_appello">
-			</p>
-			<p>
-				<input type="submit" value="Vai">
-			</p>
-		</form>
-		<%
-		}
-		%>
-		<%
-		if (elenco != null) {
-		%>
+    <%-- Pulsante Indietro con Bootstrap --%>
+    <button class="btn btn-light mb-3">
+        <a href="/Zucchetti/jsp/index.jsp" class="text-decoration-none text-dark">Indietro</a>
+    </button>
 
-		<p>
-			Per l'esame 
-			in data<%=Data%>si sono prenotati i seguenti studenti:
-		</p>
-		<table border=1>
-			<tr>
-				<th>Nome</th>
-				<th>Cognome</th>
-				<th>Matricola</th>
-			</tr>
-			<%
-			while (elenco.next()) {
-			%>
-			<tr>
-				<th><%=elenco.getString("nome")%></th>
-				<th><%=elenco.getString("cognome")%></th>
-				<th><%=elenco.getString("Matricola") %></th>
-				<% }%>
-				<%} %>
-			</tr>
+    <%-- Visualizzazione dell'errore --%>
+    <% if (error != null) { %>
+        <div style="color: red;"><%= error %></div>
+    <% } %>
 
-		</table>
-	</div>
+    <%-- Visualizzazione degli appelli --%>
+    <% if (appelli != null) { %>
+        <p>Per la sua materia <%= materia %> sono disponibili i seguenti appelli:</p>
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>ID Appello</th>
+                    <th>Data</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% while (appelli.next()) { %>
+                    <tr>
+                        <td><%= appelli.getInt(1) %></td>
+                        <td><%= appelli.getDate("Data") %></td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+
+        <%-- Form per la selezione dell'appello --%>
+        <form action="StampaStudenti" method="post">
+            <div class="mb-3">
+                <label for="ID_appello" class="form-label">Seleziona l'ID Appello</label>
+                <input type="number" name="ID_appello" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Vai</button>
+        </form>
+    <% } %>
+
+    <%-- Visualizzazione dell'elenco degli studenti --%>
+    <% if (elenco != null) { %>
+        <p>Per l'esame in data <%= Data %> si sono prenotati i seguenti studenti:</p>
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Cognome</th>
+                    <th>Matricola</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% while (elenco.next()) { %>
+                    <tr>
+                        <td><%= elenco.getString("nome") %></td>
+                        <td><%= elenco.getString("cognome") %></td>
+                        <td><%= elenco.getString("Matricola") %></td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    <% } %>
+</div>
+	
 </body>
 </html>

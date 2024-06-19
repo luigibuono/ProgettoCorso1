@@ -1,5 +1,6 @@
 package controllers;
 
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,12 +17,10 @@ import javax.servlet.http.HttpSession;
 
 import utils.Connessione;
 
-
-
 /**
  * Servlet implementation class Prenota
  */
-@WebServlet("/Prenota") // Definisce l'URL pattern per il servlet
+@WebServlet("/jsp/Prenota") // Definisce l'URL pattern per il servlet
 public class Prenota extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -64,7 +63,7 @@ public class Prenota extends HttpServlet {
 				// Se lo studente è già prenotato, imposta un messaggio di errore e reindirizza a studente.jsp
 				String error = "Hai già prenotato questo appello.";
 				request.setAttribute("error", error);
-				RequestDispatcher rd = request.getRequestDispatcher("jsp/studente.jsp");
+				RequestDispatcher rd = request.getRequestDispatcher("studente.jsp");
 				rd.forward(request, response);
 			} else {
 				// Se lo studente non è prenotato, esegue l'inserimento della prenotazione
@@ -102,18 +101,18 @@ public class Prenota extends HttpServlet {
 				request.setAttribute("data", dataScelta);
 				request.setAttribute("materia2", nomeMateria);
 
-				RequestDispatcher rd2 = request.getRequestDispatcher("jsp/formstudente.jsp");
+				RequestDispatcher rd2 = request.getRequestDispatcher("/jsp/formstudente.jsp");
                 rd2.forward(request, response);
                 
 				// Reindirizza alla pagina studente.jsp per mostrare il messaggio di successo
-				RequestDispatcher rd1 = request.getRequestDispatcher("jsp/studente.jsp");
+				RequestDispatcher rd1 = request.getRequestDispatcher("/jsp/studente.jsp");
 				rd1.forward(request, response);
 			}
 		} catch (SQLException e) {
 			// Gestisce eventuali eccezioni SQL, impostando un messaggio di errore e reindirizzando a studente.jsp
 			e.printStackTrace();
 			request.setAttribute("error", "La prenotazione è avvenuta con successo");
-			RequestDispatcher rd = request.getRequestDispatcher("jsp/studente.jsp");
+			RequestDispatcher rd = request.getRequestDispatcher("/jsp/studente.jsp");
 			rd.forward(request, response);
 		}
 	}

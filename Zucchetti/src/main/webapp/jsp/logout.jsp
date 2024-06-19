@@ -9,7 +9,7 @@
 </head>
 <body>
 	<% session.invalidate(); 
-	response.sendRedirect("index.jsp");
+	response.sendRedirect("/Zucchetti/jsp/index.jsp");
 	%>
 
 </body>
