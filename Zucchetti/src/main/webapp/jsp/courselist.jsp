@@ -37,8 +37,10 @@
 							style="color: #ffffff; font-size: 1rem; font-weight: 500">Studenti</a>
 
 						</li>
-						<li class="nav-item"> href="/Zucchetti/jsp/index2.jsp" style="color: #ffffff;font-size: 1rem;font-weight: 500">Professori</a>
-						</li>
+						 <li class="nav-item">
+                        <a class="nav-link active"
+                            href="/Zucchetti/jsp/index2.jsp" style="color: #ffffff;font-size: 1rem;font-weight: 500">Professori</a>
+                    </li>
 					</ul>
 					<div class="search-add">
 						<!-- Eventuali contenuti della sezione "search-add" -->

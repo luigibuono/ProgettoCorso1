@@ -36,7 +36,7 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link active"
-                            href="/Zucchetti/jsp/index.jsp" style="color: #ffffff;font-size: 1rem;font-weight: 500">Professori</a>
+                            href="/Zucchetti/jsp/index2.jsp" style="color: #ffffff;font-size: 1rem;font-weight: 500">Professori</a>
                     </li>
 					</ul>
 					<div class="search-add">

@@ -5,7 +5,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -25,82 +24,97 @@ public class Login extends HttpServlet {
         super();
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         response.getWriter().append("Served at: ").append(request.getContextPath());
     }
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
-        Connection conn = Connessione.getCon();
-        try {
-            Statement smt = conn.createStatement();
-            ResultSet rs = smt.executeQuery("SELECT username, password FROM studente");
-            HttpSession session;
+        try (Connection conn = Connessione.getCon()) {
+            HttpSession session = request.getSession(true);
+            boolean loggedIn = false;
 
-            while (rs.next()) {
-                String dbUsername = rs.getString("username");
-                String dbPassword = rs.getString("password");
+            // Query per gli studenti
+            String queryStudente = "SELECT matricola FROM studente WHERE username = ? AND password = ?";
+            PreparedStatement smtStudente = conn.prepareStatement(queryStudente);
+            smtStudente.setString(1, username);
+            smtStudente.setString(2, password);
+            ResultSet rsStudente = smtStudente.executeQuery();
 
-                if (dbUsername != null && dbPassword != null && dbUsername.equalsIgnoreCase(username) && dbPassword.equalsIgnoreCase(password)) {
-                    PreparedStatement smt1 = conn.prepareStatement("SELECT matricola FROM studente WHERE username = ?");
-                    smt1.setString(1, username);
-                    ResultSet rs1 = smt1.executeQuery();
-                    rs1.next();
-                    String matricola = rs1.getString("matricola");
-                    Statement smt2 = conn.createStatement();
-                    ResultSet rs2 = smt2.executeQuery("SELECT idcorso, materia, nome, cognome FROM corso JOIN professore ON cattedra = idprofessore");
-                    session = request.getSession(true);
-                    session.setAttribute("matricola", matricola);
-                    RequestDispatcher rd = request.getRequestDispatcher("/jsp/studente.jsp");
-                    request.setAttribute("tabella_corso", rs2);
-                    rd.forward(request, response);
-                    return;
+            if (rsStudente.next()) {
+                String matricola = rsStudente.getString("matricola");
+                session.setAttribute("matricola", matricola);
+                loggedIn = true;
+
+                // Recupera i corsi e i dati del professore correlati
+                String queryCorsi = "SELECT idcorso, materia, nome, cognome " +
+                                    "FROM corso JOIN professore ON cattedra = idprofessore";
+                PreparedStatement smtCorsi = conn.prepareStatement(queryCorsi);
+                ResultSet rsCorsi = smtCorsi.executeQuery();
+                request.setAttribute("tabella_corso", rsCorsi);
+
+                RequestDispatcher rd = request.getRequestDispatcher("/jsp/studente.jsp");
+                rd.forward(request, response);
+            }
+
+            // Se non è un professore e non è uno studente, controlla tra i professori
+            if (!loggedIn) {
+                String queryProfessore = "SELECT nome, cognome, idProfessore " +
+                                         "FROM professore WHERE username = ? AND password = ?";
+                PreparedStatement smtProfessore = conn.prepareStatement(queryProfessore);
+                smtProfessore.setString(1, username);
+                smtProfessore.setString(2, password);
+                ResultSet rsProfessore = smtProfessore.executeQuery();
+
+                if (rsProfessore.next()) {
+                    String nome = rsProfessore.getString("nome");
+                    String cognome = rsProfessore.getString("cognome");
+                    int idProfessore = rsProfessore.getInt("idProfessore");
+
+                    String queryCorsoProfessore = "SELECT idcorso, materia " +
+                                                  "FROM corso WHERE cattedra = ?";
+                    PreparedStatement smtCorsoProfessore = conn.prepareStatement(queryCorsoProfessore);
+                    smtCorsoProfessore.setInt(1, idProfessore);
+                    ResultSet rsCorsoProfessore = smtCorsoProfessore.executeQuery();
+
+                    if (rsCorsoProfessore.next()) {
+                        int idcorso = rsCorsoProfessore.getInt("idcorso");
+                        String materia = rsCorsoProfessore.getString("materia");
+
+                        String queryAppelli = "SELECT idAppello, Data FROM appello WHERE Materia = ?";
+                        PreparedStatement smtAppelli = conn.prepareStatement(queryAppelli);
+                        smtAppelli.setString(1, materia);
+                        ResultSet appelli = smtAppelli.executeQuery();
+
+                        session.setAttribute("nome", nome);
+                        session.setAttribute("cognome", cognome);
+                        session.setAttribute("materia", materia);
+                        request.setAttribute("appelli", appelli);
+
+                        RequestDispatcher rd = request.getRequestDispatcher("/jsp/professore.jsp");
+                        rd.forward(request, response);
+                    }
                 }
             }
 
-            Statement smt3 = conn.createStatement();
-            ResultSet rs3 = smt3.executeQuery("SELECT username, password FROM professore");
-            while (rs3.next()) {
-                String dbUsername = rs3.getString("username");
-                String dbPassword = rs3.getString("password");
-
-                if (dbUsername != null && dbPassword != null && dbUsername.equalsIgnoreCase(username) && dbPassword.equalsIgnoreCase(password)) {
-                    session = request.getSession(true);
-                    PreparedStatement smt4 = conn.prepareStatement("SELECT nome, cognome, idProfessore FROM professore WHERE username = ?");
-                    smt4.setString(1, username);
-                    ResultSet rs4 = smt4.executeQuery();
-                    rs4.next();
-                    String nome = rs4.getString("nome");
-                    String cognome = rs4.getString("cognome");
-                    int idProfessore = rs4.getInt("idProfessore");
-                    PreparedStatement smt5 = conn.prepareStatement("SELECT idcorso, materia FROM corso WHERE cattedra = ?");
-                    smt5.setInt(1, idProfessore);
-                    ResultSet rs5 = smt5.executeQuery();
-                    rs5.next();
-                    int idcorso = rs5.getInt("idcorso");
-                    String materia = rs5.getString("materia");
-                    PreparedStatement smt6 = conn.prepareStatement("SELECT idAppello, Data FROM appello WHERE Materia = ?");
-                    smt6.setString(1, materia);
-                    ResultSet appelli = smt6.executeQuery();
-                    session.setAttribute("nome", nome);
-                    session.setAttribute("cognome", cognome);
-                    RequestDispatcher rd4 = request.getRequestDispatcher("/jsp/professore.jsp");
-                    session.setAttribute("materia", materia);
-                    request.setAttribute("appelli", appelli);
-                    rd4.forward(request, response);
-                    return;
-                }
+            // Se non si è trovata corrispondenza per studente o professore, visualizza messaggio di errore
+            if (!loggedIn) {
+                String messaggio = "Username e/o password non validi";
+                request.setAttribute("messaggio", messaggio);
+                RequestDispatcher rd = request.getRequestDispatcher("/jsp/index.jsp");
+                rd.forward(request, response);
             }
-
-            RequestDispatcher rd3 = request.getRequestDispatcher("/jsp/index.jsp");
-            String messaggio = "username e password non sono presenti";
-            request.setAttribute("messaggio", messaggio);
-            rd3.forward(request, response);
 
         } catch (SQLException e) {
             e.printStackTrace();
+            String errorMessage = "Errore durante l'accesso al database";
+            request.setAttribute("errorMessage", errorMessage);
+            RequestDispatcher rd = request.getRequestDispatcher("/html/404.html");
+            rd.forward(request, response);
         }
     }
 }

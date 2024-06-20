@@ -7,21 +7,23 @@ public class Professore {
 		    private String cognome;
 		    private String username;
 		    private String password;
+		    private String tipo_utente;
 		    
 		    
-			public Professore ( int idProfessore, String nome, String cognome, String username, String password) {
+			public Professore ( int idProfessore, String nome, String cognome,String tipo_utente, String username, String password) {
 				super();
 				this.idProfessore = idProfessore;
 				this.nome = nome;
 				this.cognome = cognome;
+				this.tipo_utente = tipo_utente;
 				this.username = username;
 				this.password = password;
 			}
 
-			public int getIdStudente() {
+			public int getIdProfessore() {
 				return idProfessore;
 			}
-			public void setIdStudente(int idProfessore) {
+			public void setIdProfessore(int idProfessore) {
 				this.idProfessore = idProfessore;
 			}
 			public String getNome() {
@@ -47,6 +49,14 @@ public class Professore {
 			}
 			public void setPassword(String password) {
 				this.password = password;
+			}
+
+			public String getTipo_utente() {
+				return tipo_utente;
+			}
+
+			public void setTipo_utente(String tipo_utente) {
+				this.tipo_utente = tipo_utente;
 			}
 		
 		    
