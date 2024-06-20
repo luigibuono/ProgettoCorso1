@@ -29,12 +29,17 @@ public class CourseListServlet extends HttpServlet {
             con = DriverManager.getConnection("jdbc:mysql://localhost:3307/universita", "Luigi", "Buono");
 
             CourseDAO courseDAO = new CourseDAO(con);
-            List<CourseData> courses = courseDAO.getAllCourses();
+            List<CourseData> courses;
             
-            // Set books as request attribute
+            String searchIdStr = req.getParameter("searchId");
+            if (searchIdStr != null && !searchIdStr.trim().isEmpty()) {
+                int searchId = Integer.parseInt(searchIdStr);
+                courses = courseDAO.searchCourseById(searchId);
+            } else {
+                courses = courseDAO.getAllCourses();
+            }
+            
             req.setAttribute("courses", courses);
-            
-            // Forward request to JSP
             req.getRequestDispatcher("jsp/courselist.jsp").forward(req, res);
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
@@ -49,6 +54,8 @@ public class CourseListServlet extends HttpServlet {
             }
         }
     }
+
+
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {

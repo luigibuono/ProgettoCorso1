@@ -33,7 +33,7 @@
 					id="navbarSupportedContent">
 					<ul class="navbar-nav mb-2 mb-lg-0">
 						 <li class="nav-item">
-                       <a class="nav-link active" aria-current="page" href="/Zucchetti/html/home.html" style="color: black; font-size: 1rem;font-weight: 500">HOME</a>
+                       <a class="nav-link active" aria-current="page" href="/Zucchetti" style="color: black; font-size: 1rem;font-weight: 500">HOME</a>
                       
                     </li>
 					</ul>
@@ -82,4 +82,9 @@
 		</div>
 	</div>
 </body>
+<style>
+    .nav-item a.nav-link:hover {
+        background-color: #dc3545 !important;
+    }
+</style>
 </html>

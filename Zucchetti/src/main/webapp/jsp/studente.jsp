@@ -37,6 +37,8 @@
 			</div>
 		</nav>
 		
+		<div class="d-flex justify-content-center align-items-center vh-100">
+		
     <div class="container-fluid py-5" style="background-color: rgba(128, 128, 128, 0.7);">
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -142,6 +144,11 @@
         </div>
     </div>
 </div>
-    
+    </div>
 </body>
+<style>
+    .nav-item a.nav-link:hover {
+        background-color: #dc3545 !important;
+    }
+</style>
 </html>

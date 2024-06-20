@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import javax.servlet.ServletException;
@@ -16,12 +15,11 @@ import javax.servlet.http.HttpServletResponse;
 import dao.CourseDAO;
 import entities.CourseData;
 
-
 @WebServlet("/register")
 public class RegisterServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
-    private Connection connection; // Store connection in servlet
+    private Connection connection;
 
     @Override
     public void init() throws ServletException {
@@ -36,38 +34,47 @@ public class RegisterServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+        handleRequest(req, res);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+        handleRequest(req, res);
+    }
+
+    private void handleRequest(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
         PrintWriter pw = res.getWriter();
         res.setContentType("text/html");
 
         String courseName = req.getParameter("courseName");
         String courseDuration = req.getParameter("courseDuration");
-        Float coursePrice = null; // Inizializzare a null
-
-        // Verifica se bookPrice è stato fornito come parametro
         String coursePriceStr = req.getParameter("coursePrice");
-        if (coursePriceStr != null && !coursePriceStr.isEmpty()) {
-            try {
-            	coursePrice = Float.parseFloat(coursePriceStr); // Converti in Float se presente
-            } catch (NumberFormatException e) {
-                pw.println("<div class='alert alert-danger' role='alert'>Invalid price format.</div>");
-                pw.println("<a href='/Zucchetti/courseList'>Courses List </a>");
-                return;
-            }
-        } else {
-        	res.sendRedirect("html/404.html");
-            pw.println("<a href='courseList'>Courses List </a>");
+        Float coursePrice = null;
+
+        if (courseName == null || courseName.isEmpty() ||
+            courseDuration == null || courseDuration.isEmpty() ||
+            coursePriceStr == null || coursePriceStr.isEmpty()) {
+            pw.println("<div class='alert alert-danger' role='alert'>All fields are required.</div>");
+            pw.println("<a href='/Zucchetti/courseList'>Courses List </a>");
             return;
         }
 
-        // Se tutti i parametri sono validi, procedi con l'inserimento del libro nel database
         try {
-            CourseDAO courseDAO = new CourseDAO(connection); // Crea un'istanza di BookDAO con la connessione
-            CourseData newCourse = new CourseData(0, courseName, courseDuration, coursePrice); // Crea un nuovo oggetto BookData
-            boolean success = courseDAO.insertCourse(newCourse); // Esegui l'inserimento nel database
+            coursePrice = Float.parseFloat(coursePriceStr);
+        } catch (NumberFormatException e) {
+            pw.println("<div class='alert alert-danger' role='alert'>Invalid price format.</div>");
+            pw.println("<a href='/Zucchetti/courseList'>Courses List </a>");
+            return;
+        }
+
+        try {
+            CourseDAO courseDAO = new CourseDAO(connection);
+            CourseData newCourse = new CourseData(0, courseName, courseDuration, coursePrice);
+            boolean success = courseDAO.insertCourse(newCourse);
             if (success) {
-                res.sendRedirect("html/successo.html"); // Reindirizza alla home se l'inserimento ha successo
+                res.sendRedirect("html/successo.html");
             } else {
-                pw.println("html/404.html");
+                pw.println("<div class='alert alert-danger' role='alert'>Course registration failed.</div>");
             }
         } catch (SQLException se) {
             se.printStackTrace();
@@ -77,16 +84,7 @@ public class RegisterServlet extends HttpServlet {
             pw.println("<h1>" + e.getMessage() + "</h1>");
         }
 
-        // Stampare i link di navigazione
-        pw.println("<a href='html/home.html'>Home</a>");
-        pw.println("<br>");
         pw.println("<a href='/Zucchetti/courseList'>Courses List </a>");
-    }
-
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-        doGet(req, res);
     }
 
     @Override
@@ -94,7 +92,7 @@ public class RegisterServlet extends HttpServlet {
         super.destroy();
         try {
             if (connection != null) {
-                connection.close(); // Close the connection when servlet is destroyed
+                connection.close();
             }
         } catch (SQLException e) {
             e.printStackTrace();
