@@ -37,9 +37,7 @@
 							style="color: #ffffff; font-size: 1rem; font-weight: 500">Studenti</a>
 
 						</li>
-						<li class="nav-item"><a class="nav-link active"
-							href="/Zucchetti/jsp/index.jsp"
-							style="color: #ffffff; font-size: 1rem; font-weight: 500">Professori</a>
+						<li class="nav-item"> href="/Zucchetti/jsp/index2.jsp" style="color: #ffffff;font-size: 1rem;font-weight: 500">Professori</a>
 						</li>
 					</ul>
 					<div class="search-add">
@@ -58,7 +56,7 @@
 				<h2 class="bg-danger text-white text-center p-2 mb-4">Lista
 					Corsi</h2>
 					
-				<!-- Search Form -->
+				
 				 <!-- Modulo di ricerca -->
                 <form method="get" action="courseList">
                     <div class="input-group mb-3">

@@ -33,8 +33,13 @@ public class CourseListServlet extends HttpServlet {
             
             String searchIdStr = req.getParameter("searchId");
             if (searchIdStr != null && !searchIdStr.trim().isEmpty()) {
-                int searchId = Integer.parseInt(searchIdStr);
-                courses = courseDAO.searchCourseById(searchId);
+                try {
+                    int searchId = Integer.parseInt(searchIdStr);
+                    courses = courseDAO.searchCourseById(searchId);
+                } catch (NumberFormatException e) {
+                    courses = courseDAO.getAllCourses();
+                    req.setAttribute("errorMessage", "L'ID inserito non è valido. Visualizzazione di tutti i corsi.");
+                }
             } else {
                 courses = courseDAO.getAllCourses();
             }

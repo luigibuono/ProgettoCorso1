@@ -54,7 +54,7 @@ public class RegisterServlet extends HttpServlet {
         if (courseName == null || courseName.isEmpty() ||
             courseDuration == null || courseDuration.isEmpty() ||
             coursePriceStr == null || coursePriceStr.isEmpty()) {
-            pw.println("<div class='alert alert-danger' role='alert'>All fields are required.</div>");
+        	res.sendRedirect("html/404.html");
             pw.println("<a href='/Zucchetti/courseList'>Courses List </a>");
             return;
         }

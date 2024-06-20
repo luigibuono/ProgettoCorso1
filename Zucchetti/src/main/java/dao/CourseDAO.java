@@ -11,6 +11,7 @@ import java.util.Optional;
 import com.mysql.cj.protocol.Resultset;
 
 import entities.CourseData;
+import entities.Utente;
 
 public class CourseDAO {
 	private Connection connection;
@@ -26,6 +27,18 @@ public class CourseDAO {
 			ps.setString(1, course.getCourseName());
 			ps.setString(2, course.getCourseDuration());
 			ps.setFloat(3, course.getCoursePrice());
+			int count = ps.executeUpdate();
+			return count == 1;
+		}
+	}
+	
+	public boolean insertUser(Utente utente) throws SQLException {
+		String query = "INSERT INTO STUDENTE(NOME, COGNOME, USERNAME , PASSWORD) VALUES (?, ?, ?, ?)";
+		try (PreparedStatement ps = connection.prepareStatement(query)) {
+			ps.setString(1, utente.getNome());
+			ps.setString(2, utente.getCognome());
+			ps.setString(3, utente.getUsername());
+			ps.setString(4, utente.getPassword());
 			int count = ps.executeUpdate();
 			return count == 1;
 		}

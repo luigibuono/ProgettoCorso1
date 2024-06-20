@@ -53,7 +53,7 @@
 	</nav>
 
 		<div class="banner">
-			<div class="content p-5 bg-primary-trasparent text-white border" style="background-color: rgba(128, 128, 128, 0.7);">
+			<div class="content p-5  bg-primary-trasparent text-white border" style="background-color: rgba(128, 128, 128, 0.7);">
 				<h2>BENVENUTO IN UNIVERSITA</h2>
 				<p>Scegli il corso che fa per te!</p>
 			</div>
@@ -62,42 +62,46 @@
 	<div class="d-flex justify-content-center align-items-center vh-100">
 
 		<div align="center"
-            class="p-5 bg-primary-trasparent text-white border"
-            style="background-color: rgba(128, 128, 128, 0.7);">
-            <form action="login" method="post">
-            <h2 class="m-2 p-2" style="background-color: rgba(0, 114, 188, 0.87);">LOGIN</h2>
-                <h3>Inserisci nome utente</h3>
-                <input type="text" name="username" placeholder="username">
-                <p>
-                <h3>Inserisci password</h3>
-                <input type="password" name="password" placeholder="password">
-                <p class="mt-4">
-                    <input type="submit" value="Accedi">
-                <p>
-                    <%
-                    String messaggio = (String) request.getAttribute("messaggio");
-                    %>
-                    <%
-                    if (messaggio != null) {
-                    %>
-                
-                <p align="center">
-                    <a style="font-family: helvetica; color: red; font-size: 20px">
-                        <%
-                        out.print(messaggio);
-                        %>
-                    </a>
-                    <%-- si poteva fare anche con l'espressione <%=messaggio%> --%>
-                </p>
-                <%
-                }
-                %>
-                <p class="mt-4">
-                    Non sei ancora registrato?<a href="/Zucchetti/jsp/registrazione.jsp">Registrati qui!</a>
-                <p>
-            </form>
-        </div>
-    </div>
+			class="p-5 bg-primary-trasparent text-white border"
+			style="background-color: rgba(128, 128, 128, 0.7); margin-top:15rem;">
+			<form action="Registrazione" method="post">
+			<h2 class="m-2 p-2" style="background-color: rgba(0, 114, 188, 0.87);">REGISTRAZIONE</h2>
+				<h3>Inserisci nome </h3>
+				<input type="text" name="nome" placeholder="nome">
+				<h3>Inserisci cognome </h3>
+				<input type="text" name="cognome" placeholder="cognome">
+				<h3>Inserisci username </h3>
+				<input type="text" name="username" placeholder="username">
+				<p>
+				<h3>Inserisci password</h3>
+				<input type="text" name="password" placeholder="password">
+				<p class="mt-4">
+					<input type="submit" value="Registrati">
+				<p>
+					<%
+					String messaggio = (String) request.getAttribute("messaggio");
+					%>
+					<%
+					if (messaggio != null) {
+					%>
+				
+				<p align="center">
+					<a style="font-family: helvetica; color: red; font-size: 20px">
+						<%
+						out.print(messaggio);
+						%>
+					</a>
+					<%-- si poteva fare anche con l'espressione <%=messaggio%> --%>
+				</p>
+				<%
+				}
+				%>
+				<p class="mt-4">
+					Non sei ancora registrato?<a href="">Registrati qui!</a>
+				<p>
+			</form>
+		</div>
+	</div>
 	<footer class="text-center bg-body-tertiary">
 
 		<!-- Copyright -->
