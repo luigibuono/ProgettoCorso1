@@ -1,0 +1,30 @@
+
+<h2 class="animate__animated animate__bounce">User List</h2>
+<hr>
+<div class="form-group">
+  <input type="text" class="form-control" placeholder="Cerca per nome o contatto" [(ngModel)]="searchQuery" />
+  <button class="btn btn-primary" (click)="searchUsers()">Cerca</button>
+</div>
+<table class="table">
+  <thead>
+    <tr>
+      <th>S.No.</th>
+      <th>Name</th>
+      <th>Contact</th>
+      <th>Address</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of (searchQuery.trim() !== '' ? searchResults : users); let i=index">
+      <td>{{ i + 1 }}</td>
+      <td>{{ item.name }}</td>
+      <td>{{ item.contact }}</td>
+      <td>{{ item.address }}</td>
+      <td>
+        <a [routerLink]="['/edit', item._id]" class="btn btn-success">Modifica</a> &nbsp;
+        <a href="javascript:void(0);" class="btn btn-danger" (click)="deleteUser(item._id)">Elimina</a>
+      </td>
+    </tr>
+  </tbody>
+</table>
